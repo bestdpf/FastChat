@@ -224,6 +224,7 @@ class VicunaAdapter(BaseAdapter):
         tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
         model = AutoModelForCausalLM.from_pretrained(
             model_path,
+            trust_remote_code=True,
             low_cpu_mem_usage=True,
             **from_pretrained_kwargs,
         )
