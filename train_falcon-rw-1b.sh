@@ -20,6 +20,7 @@ torchrun --nproc_per_node=1 --master_port=20013 fastchat/train/train_mem.py \
     --lr_scheduler_type "cosine" \
     --logging_steps 1 \
     --resume_from_checkpoint True\
+    --fsdp "full_shard auto_wrap offload" \
     --model_max_length 2048 \
     --lazy_preprocess False > run_falcon.out 2> run_falcon.err & 
     # --model_max_length 2048 \
