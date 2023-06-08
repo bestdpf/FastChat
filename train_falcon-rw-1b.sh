@@ -1,5 +1,5 @@
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:64
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=0,1
 export PYTHONPATH=.:/home/fangbing/minillm/falcon-rw-1b
 torchrun --nproc_per_node=1 --master_port=20013 fastchat/train/train_mem.py \
     --model_name_or_path /home/fangbing/minillm/falcon-rw-1b  \
