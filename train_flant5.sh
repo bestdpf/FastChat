@@ -1,5 +1,6 @@
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:64
 export CUDA_VISIBLE_DEVICES=0
+export PYTHONPATH=.
 torchrun --nproc_per_node=1 --master_port=9778 fastchat/train/train_flant5.py \
     --model_name_or_path /home/fangbing/minillm/flan-t5-base  \
     --data_path /home/fangbing/minillm/chatfine/total_filtered.json \
