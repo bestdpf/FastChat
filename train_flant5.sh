@@ -7,8 +7,8 @@ torchrun --nproc_per_node=1 --master_port=9778 fastchat/train/train_flant5.py \
     --bf16 True \
     --output_dir ./checkpoints_flant5_base \
     --num_train_epochs 3 \
-    --per_device_train_batch_size 8 \
-    --per_device_eval_batch_size 8 \
+    --per_device_train_batch_size 2 \
+    --per_device_eval_batch_size 2 \
     --gradient_accumulation_steps 4 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
