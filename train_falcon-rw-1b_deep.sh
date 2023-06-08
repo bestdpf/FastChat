@@ -7,8 +7,8 @@ torchrun --nproc_per_node=1 --master_port=20013 fastchat/train/train_mem.py \
     --bf16 True \
     --output_dir output_falcon_deep \
     --num_train_epochs 3 \
-    --per_device_train_batch_size 8 \
-    --per_device_eval_batch_size 8 \
+    --per_device_train_batch_size 1 \
+    --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 16 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
@@ -21,6 +21,6 @@ torchrun --nproc_per_node=1 --master_port=20013 fastchat/train/train_mem.py \
     --logging_steps 1 \
     --deepspeed "./default_offload_opt_param.json" \
     --model_max_length 2048 \
-    --gradient_checkpointing True \
+    --gradient_checkpointing False \
     --lazy_preprocess False > run_falcon.out 2> run_falcon.err & 
 
