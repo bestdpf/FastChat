@@ -330,12 +330,12 @@ class SupervisedDataset(Dataset):
                 del_idx = self.input_ids.index(input)
                 self.input_ids.pop(del_idx)
                 self.labels.pop(del_idx)
-            if len(input) >= tokenizer.model_max_length:
+            elif len(input) >= tokenizer.model_max_length:
                 print('skip too long input')
                 del_idx = self.input_ids.index(input)
                 self.input_ids.pop(del_idx)
                 self.labels.pop(del_idx)
-            if len(label) <= 5:
+            elif len(label) <= 5:
                 del_idx = self.labels.index(label)
                 self.input_ids.pop(del_idx)
                 self.labels.pop(del_idx)
