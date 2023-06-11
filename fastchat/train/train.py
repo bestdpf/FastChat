@@ -266,8 +266,11 @@ def train():
     else:
         trainer.train()
     trainer.save_state()
-    safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
-
+    trainer.save_model(output_dir=training_args.output_dir + '-full')
+    try:
+        safe_save_model_for_hf_trainer(trainer=trainer, output_dir=training_args.output_dir)
+    except:
+        print('save hf model error')
 
 if __name__ == "__main__":
     train()
