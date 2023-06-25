@@ -1,7 +1,8 @@
-export OMP_NUM_THREADS=8
+export OMP_NUM_THREADS=1
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:64
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 export PYTHONPATH=.
+export DS_ACCELERATOR="cuda"
 torchrun --nproc_per_node=8 --master_port=9778 fastchat/train/train_flant5.py \
     --model_name_or_path ../flan-t5-large  \
     --data_path ../chatfine/total_filtered.json \

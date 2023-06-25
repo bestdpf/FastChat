@@ -21,7 +21,7 @@
     }
   },
   "zero_optimization": {
-    "stage": 1, 
+    "stage": 3, 
     "offload_optimizer": {
       "device": "cpu",
       "pin_memory": true
@@ -38,12 +38,29 @@
     "stage3_param_persistence_threshold": "auto",
     "stage3_max_live_parameters": 1e9,
     "stage3_max_reuse_distance": 1e9,
-    "stage3_gather_16bit_weights_on_model_save": false
+    "stage3_gather_16bit_weights_on_model_save": true 
   },
   "gradient_accumulation_steps": "auto",
   "gradient_clipping": "auto",
   "steps_per_print": 5,
   "train_batch_size": "auto",
   "train_micro_batch_size_per_gpu": "auto",
-  "wall_clock_breakdown": false
+  "wall_clock_breakdown": false,
+  "quantize_training": {
+      "enabled": true,
+      "quantize_verbose": true,
+      "quantizer_kernel": true,
+      "quantize-algo": {
+        "q_type": "symmetric"
+      },
+      "quantize_bits": {
+        "start_bits": 16,
+        "target_bits": 8
+      },
+      "quantize_schedule": {
+        "quantize_period": 10,
+        "schedule_offset": 0
+      },
+      "quantize_groups": 8
+    }
 }
