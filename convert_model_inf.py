@@ -21,7 +21,7 @@ def convert_to_inf(model_path, inf_path):
         quant=QuantizationConfig(quant_dtype='s8', dequant_dtype='bf16'),
     )
 
-    model_neuron = LlamaForSampling.from_pretrained(model_path, batch_size=1, tp_degree=2, n_positions=2048, amp='bfloat16',
+    model_neuron = LlamaForSampling.from_pretrained(model_path, batch_size=1, tp_degree=2, n_positions=2048, amp='bf16',
                                                     neuron_config=neuron_config,
                                                    unroll=None)
     model_neuron.to_neuron()
