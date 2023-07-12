@@ -61,7 +61,7 @@ class Conversation:
                     ret += role + ": " + message + seps[i % 2]
                 else:
                     ret += role + ":"
-            print(f'generate conv is {ret}')
+            # print(f'generate conv is {ret}')
             return ret
         elif self.sep_style == SeparatorStyle.ADD_COLON_SPACE_SINGLE:
             ret = self.system + self.sep
