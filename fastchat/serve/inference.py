@@ -70,7 +70,7 @@ def generate_stream(
     stop_token_ids = params.get("stop_token_ids", None) or []
     stop_token_ids.append(tokenizer.eos_token_id)
 
-    print(f'repetition_penalty is {repetition_penalty}')
+    print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
     logits_processor = prepare_logits_processor(
         temperature, repetition_penalty, top_p, top_k
     )
