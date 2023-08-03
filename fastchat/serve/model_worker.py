@@ -69,6 +69,7 @@ class ModelWorker:
         max_gpu_memory,
         load_8bit=False,
         cpu_offloading=False,
+        trust_remote_code=True,
     ):
         self.controller_addr = controller_addr
         self.worker_addr = worker_addr
@@ -80,7 +81,7 @@ class ModelWorker:
 
         logger.info(f"Loading the model {self.model_name} on worker {worker_id} ...")
         self.model, self.tokenizer = load_model(
-            model_path, device, num_gpus, max_gpu_memory, load_8bit, cpu_offloading
+            model_path, device, num_gpus, max_gpu_memory, load_8bit, cpu_offloading, trust_remote_code
         )
         if self.tokenizer.pad_token == None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
