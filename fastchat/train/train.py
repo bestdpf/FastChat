@@ -83,12 +83,14 @@ def preprocess(
 
     # Apply prompt templates
     conversations = []
-    for i, source in enumerate(sources):
+    for i, source_input in enumerate(sources):
+        source = source_input['conversations']
         if roles[source[0]["from"]] != conv.roles[0]:
             # Skip the first one if it is not from human
             source = source[1:]
 
         conv.messages = []
+        conv.system = source_input.get('instruction', '')
         for j, sentence in enumerate(source):
             role = roles[sentence["from"]]
             assert role == conv.roles[j % 2], f"{i}"
@@ -158,7 +160,7 @@ class SupervisedDataset(Dataset):
         super(SupervisedDataset, self).__init__()
 
         rank0_print("Formatting inputs...")
-        sources = [example["conversations"] for example in raw_data]
+        sources = [example for example in raw_data]
         data_dict = preprocess(sources, tokenizer)
 
         self.input_ids = data_dict["input_ids"]
@@ -195,7 +197,7 @@ class LazySupervisedDataset(Dataset):
         if i in self.cached_data_dict:
             return self.cached_data_dict[i]
 
-        ret = preprocess([self.raw_data[i]["conversations"]], self.tokenizer)
+        ret = preprocess([self.raw_data[i]], self.tokenizer)
         ret = dict(
             input_ids=ret["input_ids"][0],
             labels=ret["labels"][0],
