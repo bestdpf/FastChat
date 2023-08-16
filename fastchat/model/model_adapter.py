@@ -173,7 +173,7 @@ def load_model(
             model_path,
             load_in_4bit=load_4bit,
             # torch_dtype=torch.float16,
-            device_map=device,
+            device_map="auto",
             # quantization_config=BitsAndBytesConfig(
             #     load_in_4bit=load_4bit,
             #     bnb_4bit_quant_type="nf4",
