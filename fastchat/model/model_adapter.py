@@ -150,7 +150,7 @@ def load_model(
         model = AutoModelForCausalLM.from_pretrained(
             model_path,
             load_in_8bit=load_8bit,
-            # torch_dtype=torch.float16,
+            torch_dtype=torch.float16,
             device_map='auto',
             # quantization_config=BitsAndBytesConfig(
             #     load_in_4bit=load_4bit,
@@ -176,8 +176,9 @@ def load_model(
             device_map="auto",
             quantization_config=BitsAndBytesConfig(
                 load_in_4bit=load_4bit,
-                bnb_4bit_compute_type=torch.float16,
+                bnb_4bit_compute_dtype=torch.float16,
                 bnb_4bit_quant_type="nf4",
+                # bnb_4bit_use_double_quant=True,
             ),
         )
         return model, tokenizer
