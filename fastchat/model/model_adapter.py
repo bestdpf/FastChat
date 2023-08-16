@@ -212,7 +212,7 @@ def add_model_args(parser):
     parser.add_argument(
         "--device",
         type=str,
-        choices=["cpu", "cuda", "mps"],
+        choices=["cpu", "cuda", "mps", "auto"],
         default="cuda",
         help="The device type",
     )
