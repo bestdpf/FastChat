@@ -146,14 +146,26 @@ def load_model(
         )
         kwargs["load_in_8bit"] = load_8bit
     elif load_8bit:
-        if num_gpus != 1:
-            warnings.warn(
-                "8-bit quantization is not supported for multi-gpu inference."
-            )
-        else:
-            return load_compress_model(
-                model_path=model_path, device=device, torch_dtype=kwargs["torch_dtype"]
-            )
+        tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_path,
+            load_in_8bit=load_8bit,
+            # torch_dtype=torch.float16,
+            device_map=device,
+            # quantization_config=BitsAndBytesConfig(
+            #     load_in_4bit=load_4bit,
+            #     bnb_4bit_quant_type="nf4",
+            # ),
+        )
+        return model, tokenizer
+        # if num_gpus != 1:
+        #     warnings.warn(
+        #         "8-bit quantization is not supported for multi-gpu inference."
+        #     )
+        # else:
+        #     return load_compress_model(
+        #         model_path=model_path, device=device, torch_dtype=kwargs["torch_dtype"]
+        #     )
     elif load_4bit:
         from transformers import BitsAndBytesConfig
         tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
