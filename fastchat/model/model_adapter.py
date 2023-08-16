@@ -172,12 +172,13 @@ def load_model(
         model = AutoModelForCausalLM.from_pretrained(
             model_path,
             load_in_4bit=load_4bit,
-            # torch_dtype=torch.float16,
+            torch_dtype=torch.float16,
             device_map="auto",
-            # quantization_config=BitsAndBytesConfig(
-            #     load_in_4bit=load_4bit,
-            #     bnb_4bit_quant_type="nf4",
-            # ),
+            quantization_config=BitsAndBytesConfig(
+                load_in_4bit=load_4bit,
+                bnb_4bit_compute_type=torch.float16,
+                bnb_4bit_quant_type="nf4",
+            ),
         )
         return model, tokenizer
 
