@@ -151,7 +151,7 @@ def load_model(
             model_path,
             load_in_8bit=load_8bit,
             # torch_dtype=torch.float16,
-            device_map=device,
+            device_map='auto',
             # quantization_config=BitsAndBytesConfig(
             #     load_in_4bit=load_4bit,
             #     bnb_4bit_quant_type="nf4",
@@ -212,7 +212,7 @@ def add_model_args(parser):
     parser.add_argument(
         "--device",
         type=str,
-        choices=["cpu", "cuda", "mps", "auto"],
+        choices=["cpu", "cuda", "mps",],
         default="cuda",
         help="The device type",
     )
