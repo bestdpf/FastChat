@@ -68,6 +68,7 @@ class ModelWorker:
         num_gpus,
         max_gpu_memory,
         load_8bit=False,
+        load_4bit=False,
         cpu_offloading=False,
         trust_remote_code=True,
     ):
@@ -81,7 +82,7 @@ class ModelWorker:
 
         logger.info(f"Loading the model {self.model_name} on worker {worker_id} ...")
         self.model, self.tokenizer = load_model(
-            model_path, device, num_gpus, max_gpu_memory, load_8bit, cpu_offloading, trust_remote_code
+            model_path, device, num_gpus, max_gpu_memory, load_8bit, load_4bit, cpu_offloading, trust_remote_code
         )
         if self.tokenizer.pad_token == None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
@@ -423,6 +424,7 @@ if __name__ == "__main__":
         args.num_gpus,
         args.max_gpu_memory,
         args.load_8bit,
+        args.load_4bit,
         args.cpu_offloading,
     )
     uvicorn.run(app, host=args.host, port=args.port, log_level="info")

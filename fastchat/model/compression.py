@@ -129,7 +129,6 @@ def load_compress_model(model_path, device, torch_dtype):
             torch.cuda.empty_cache()
 
     for name in model.state_dict():
-        print(f'dict key name in model: {name}')
         if name not in linear_weights:
             set_module_tensor_to_device(
                 model, name, device, value=compressed_state_dict[name]
