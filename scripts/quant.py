@@ -1,6 +1,7 @@
 # Modified from https://github.com/soulteary/docker-llama2-chat/blob/main/llama2-7b-cn-4bit/quantization_4bit.py
 
 import torch
+import sys
 from transformers import AutoModelForCausalLM, BitsAndBytesConfig
 
 
@@ -17,3 +18,7 @@ def convert_int4(in_dir, out_dir):
 
     model.save_pretrained(out_dir)
     print(f"convert {in_dir} to {out_dir} done")
+
+
+if __name__ == '__main__':
+    convert_int4(sys.argv[1], sys.argv[2])
