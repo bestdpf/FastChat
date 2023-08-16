@@ -115,7 +115,6 @@ def load_compress_model(model_path, device, torch_dtype):
     for filename in tqdm(files):
         tmp_state_dict = torch.load(filename)
         for name in tmp_state_dict:
-            print(f'dict key name: {name}')
             if name in linear_weights:
                 tensor = tmp_state_dict[name].to(device).data.to(torch_dtype)
                 compressed_state_dict[name] = compress(
