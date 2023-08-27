@@ -87,7 +87,7 @@ def generate_stream(
 
     print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
     logits_processor = prepare_logits_processor(
-        temperature, repetition_penalty, top_p, top_k, input_ids,
+        temperature, repetition_penalty, top_p, top_k, torch.as_tensor([input_ids], device=device),
     )
 
     if model.config.is_encoder_decoder:
