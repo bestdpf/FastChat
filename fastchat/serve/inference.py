@@ -23,6 +23,7 @@ from transformers.generation.logits_process import (
     RepetitionPenaltyLogitsProcessor,
     NoRepeatNGramLogitsProcessor,
     EncoderNoRepeatNGramLogitsProcessor,
+    EncoderRepetitionPenaltyLogitsProcessor,
     TemperatureLogitsWarper,
     TopKLogitsWarper,
     TopPLogitsWarper,
@@ -41,7 +42,7 @@ def prepare_logits_processor(
     if temperature >= 1e-5 and temperature != 1.0:
         processor_list.append(TemperatureLogitsWarper(temperature))
     if 10.0 > repetition_penalty > 1.0:
-        processor_list.append(RepetitionPenaltyLogitsProcessor(repetition_penalty))
+        processor_list.append(EncoderRepetitionPenaltyLogitsProcessor(repetition_penalty, input_ids))
     elif repetition_penalty >= 10.0:
         processor_list.append(EncoderNoRepeatNGramLogitsProcessor(int(repetition_penalty), input_ids))
     if 1e-8 <= top_p < 1.0:
