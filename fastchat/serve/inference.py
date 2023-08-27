@@ -22,6 +22,7 @@ from transformers.generation.logits_process import (
     LogitsProcessorList,
     RepetitionPenaltyLogitsProcessor,
     NoRepeatNGramLogitsProcessor,
+    EncoderNoRepeatNGramLogitsProcessor,
     TemperatureLogitsWarper,
     TopKLogitsWarper,
     TopPLogitsWarper,
@@ -33,7 +34,7 @@ from fastchat.model.chatglm_model import chatglm_generate_stream
 
 
 def prepare_logits_processor(
-    temperature: float, repetition_penalty: float, top_p: float, top_k: int
+    temperature: float, repetition_penalty: float, top_p: float, top_k: int, input_ids
 ) -> LogitsProcessorList:
     processor_list = LogitsProcessorList()
     # TemperatureLogitsWarper doesn't accept 0.0, 1.0 makes it a no-op so we skip two cases.
@@ -42,7 +43,7 @@ def prepare_logits_processor(
     if 10.0 > repetition_penalty > 1.0:
         processor_list.append(RepetitionPenaltyLogitsProcessor(repetition_penalty))
     elif repetition_penalty >= 10.0:
-        processor_list.append(NoRepeatNGramLogitsProcessor(int(repetition_penalty)))
+        processor_list.append(EncoderNoRepeatNGramLogitsProcessor(int(repetition_penalty), input_ids))
     if 1e-8 <= top_p < 1.0:
         processor_list.append(TopPLogitsWarper(top_p))
     if top_k > 0:
@@ -73,11 +74,6 @@ def generate_stream(
     stop_token_ids = params.get("stop_token_ids", None) or []
     stop_token_ids.append(tokenizer.eos_token_id)
 
-    print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
-    logits_processor = prepare_logits_processor(
-        temperature, repetition_penalty, top_p, top_k
-    )
-
     input_ids = tokenizer(prompt).input_ids
     input_echo_len = len(input_ids)
     output_ids = list(input_ids)
@@ -88,6 +84,11 @@ def generate_stream(
         max_src_len = context_len - max_new_tokens - 8
 
     input_ids = input_ids[-max_src_len:]
+
+    print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
+    logits_processor = prepare_logits_processor(
+        temperature, repetition_penalty, top_p, top_k, input_ids,
+    )
 
     if model.config.is_encoder_decoder:
         encoder_output = model.encoder(
