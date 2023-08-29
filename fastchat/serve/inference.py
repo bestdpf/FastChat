@@ -273,7 +273,7 @@ def generate_stream(
                                 use_cache=True, top_p=top_p, top_k=top_k)
 
     print(f'output_ids {output_ids}')
-    # output_ids[0] = output_ids[0][input_echo_len:]
+    output_ids[0] = output_ids[0][input_echo_len:]
     output = tokenizer.batch_decode(
         output_ids,
         skip_special_tokens=True,
