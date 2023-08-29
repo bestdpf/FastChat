@@ -62,7 +62,7 @@ def partial_stop(output, stop_str):
 
 
 @torch.inference_mode()
-def generate_stream(
+def generate_stream_old(
     model, tokenizer, params, device, context_len=2048, stream_interval=2
 ):
     prompt = params["prompt"]
@@ -239,7 +239,7 @@ def generate_stream(
 
 
 @torch.inference_mode()
-def generate_stream_bad(
+def generate_stream(
     model, tokenizer, params, device, context_len=2048, stream_interval=2
 ):
     prompt = params["prompt"]
@@ -266,19 +266,21 @@ def generate_stream_bad(
 
     print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
 
-    output_ids = model.generate(input_ids=torch.as_tensor(input_ids, device=device),
+    output_ids = model.generate(input_ids=torch.as_tensor([input_ids], device=device),
                                 # max_length=max_new_tokens,
                                 max_new_tokens=max_new_tokens,
                                 temperature=temperature, repetition_penalty=repetition_penalty,
                                 use_cache=True, top_p=top_p, top_k=top_k)
 
+    print(f'output_ids {output_ids}')
+    output_ids[0] = output_ids[0][input_echo_len:]
     output = tokenizer.batch_decode(
         output_ids,
         skip_special_tokens=True,
         spaces_between_special_tokens=False,
     )
 
-    if len(output_ids) == max_new_tokens:
+    if len(output_ids[0]) == max_new_tokens:
         finish_reason = "length"
     else:
         finish_reason = "stop"
@@ -287,8 +289,8 @@ def generate_stream_bad(
         "text": output[0],
         "usage": {
             "prompt_tokens": input_echo_len,
-            "completion_tokens": len(output_ids) - 1,
-            "total_tokens": input_echo_len + len(output_ids) - 1,
+            "completion_tokens": len(output_ids[0]) - 1,
+            "total_tokens": input_echo_len + len(output_ids[0]) - 1,
         },
         "finish_reason": finish_reason,
     }
