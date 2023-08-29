@@ -254,7 +254,7 @@ def generate_stream(
     stop_token_ids = params.get("stop_token_ids", None) or []
     stop_token_ids.append(tokenizer.eos_token_id)
 
-    input_ids = tokenizer(prompt, return_tensors="pt", device=device).input_ids
+    input_ids = tokenizer(prompt).input_ids
     input_echo_len = len(input_ids)
 
     if model.config.is_encoder_decoder:
@@ -262,30 +262,29 @@ def generate_stream(
     else:
         max_src_len = context_len - max_new_tokens - 8
 
-    # input_ids = input_ids[-max_src_len:]
+    input_ids = input_ids[-max_src_len:]
 
     print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
 
-    output_ids = model.generate(input_ids=input_ids,
-                                # input_ids=torch.as_tensor(input_ids, device=device),
+    output_ids = model.generate(input_ids=torch.as_tensor([input_ids], device=device),
                                 # max_length=max_new_tokens,
                                 max_new_tokens=max_new_tokens,
                                 temperature=temperature, repetition_penalty=repetition_penalty,
                                 use_cache=True, top_p=top_p, top_k=top_k)
 
-    output = tokenizer.decode(
+    output = tokenizer.batch_decode(
         output_ids,
         skip_special_tokens=True,
         spaces_between_special_tokens=False,
     )
 
-    if len(output_ids) == max_new_tokens:
+    if len(output_ids[0]) == max_new_tokens:
         finish_reason = "length"
     else:
         finish_reason = "stop"
 
     yield {
-        "text": output,
+        "text": output[0],
         "usage": {
             "prompt_tokens": input_echo_len,
             "completion_tokens": len(output_ids) - 1,
