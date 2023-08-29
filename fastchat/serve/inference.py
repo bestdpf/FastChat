@@ -272,16 +272,12 @@ def generate_stream(
                                 temperature=temperature, repetition_penalty=repetition_penalty,
                                 use_cache=True, top_p=top_p, top_k=top_k)
 
-    print(f'output_ids {output_ids}')
     output_ids = output_ids[0][input_echo_len:]
-    print(f'output_ids final {output_ids}')
     output = tokenizer.decode(
         output_ids,
         skip_special_tokens=True,
         spaces_between_special_tokens=False,
     )
-    print(f'output {output}')
-
     if len(output_ids) == max_new_tokens:
         finish_reason = "length"
     else:
