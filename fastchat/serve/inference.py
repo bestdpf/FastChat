@@ -254,7 +254,7 @@ def generate_stream(
     stop_token_ids = params.get("stop_token_ids", None) or []
     stop_token_ids.append(tokenizer.eos_token_id)
 
-    input_ids = tokenizer(prompt).input_ids
+    input_ids = tokenizer(prompt, return_tensors="pt").input_ids
     input_echo_len = len(input_ids)
 
     if model.config.is_encoder_decoder:
