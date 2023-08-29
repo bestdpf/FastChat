@@ -62,7 +62,7 @@ def partial_stop(output, stop_str):
 
 
 @torch.inference_mode()
-def generate_stream_old(
+def generate_stream(
     model, tokenizer, params, device, context_len=2048, stream_interval=2
 ):
     prompt = params["prompt"]
@@ -239,7 +239,7 @@ def generate_stream_old(
 
 
 @torch.inference_mode()
-def generate_stream(
+def generate_stream_v2(
     model, tokenizer, params, device, context_len=2048, stream_interval=2
 ):
     prompt = params["prompt"]
