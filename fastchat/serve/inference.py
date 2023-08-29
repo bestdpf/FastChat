@@ -262,11 +262,12 @@ def generate_stream(
     else:
         max_src_len = context_len - max_new_tokens - 8
 
-    input_ids = input_ids[-max_src_len:]
+    # input_ids = input_ids[-max_src_len:]
 
     print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
 
-    output_ids = model.generate(input_ids=torch.as_tensor(input_ids, device=device),
+    output_ids = model.generate(input_ids=input_ids,
+                                # input_ids=torch.as_tensor(input_ids, device=device),
                                 # max_length=max_new_tokens,
                                 max_new_tokens=max_new_tokens,
                                 temperature=temperature, repetition_penalty=repetition_penalty,
