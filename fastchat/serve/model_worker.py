@@ -427,4 +427,4 @@ if __name__ == "__main__":
         args.load_4bit,
         args.cpu_offloading,
     )
-    uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+    uvicorn.run(app, host=args.host, port=args.port, log_level="info", timeout_keep_alive=0)

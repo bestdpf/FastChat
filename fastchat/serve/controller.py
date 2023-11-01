@@ -358,4 +358,4 @@ if __name__ == "__main__":
     logger.info(f"args: {args}")
 
     controller = Controller(args.dispatch_method)
-    uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+    uvicorn.run(app, host=args.host, port=args.port, log_level="info", timeout_keep_alive=0)

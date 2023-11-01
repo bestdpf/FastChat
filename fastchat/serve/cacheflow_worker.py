@@ -343,4 +343,4 @@ if __name__ == "__main__":
         distributed_init_method,
         all_stage_devices,
     )
-    uvicorn.run(app, host=args.host, port=args.port, log_level="info")
+    uvicorn.run(app, host=args.host, port=args.port, log_level="info", timeout_keep_alive=0)
