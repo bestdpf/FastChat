@@ -117,6 +117,7 @@ async def check_length(request, prompt, max_tokens):
         )
         token_num = response.json()["count"]
 
+    return None
     if token_num + max_tokens > context_len:
         return create_error_response(
             ErrorCode.CONTEXT_OVERFLOW,
