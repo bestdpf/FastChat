@@ -15,6 +15,7 @@ import json
 import logging
 
 import os
+import traceback
 from typing import Generator, Optional, Union, Dict, List, Any
 
 import fastapi
@@ -359,6 +360,7 @@ async def create_chat_completion(request: ChatCompletionRequest):
     try:
         all_tasks = await asyncio.gather(*chat_completions)
     except Exception as e:
+        print(traceback.format_exc())
         return create_error_response(ErrorCode.INTERNAL_ERROR, str(e))
     usage = UsageInfo()
     for i, content in enumerate(all_tasks):
