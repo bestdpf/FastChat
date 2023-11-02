@@ -64,7 +64,7 @@ class AppSettings(BaseSettings):
 
 app_settings = AppSettings()
 
-app = fastapi.FastAPI()
+app = fastapi.FastAPI(debug=True)
 headers = {"User-Agent": "FastChat API Server"}
 
 
