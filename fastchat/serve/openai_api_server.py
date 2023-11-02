@@ -724,4 +724,4 @@ if __name__ == "__main__":
 
     logger.info(f"args: {args}")
 
-    uvicorn.run(app, host=args.host, port=args.port, log_level="info", timeout_keep_alive=0)
+    uvicorn.run(app, host=args.host, port=args.port, log_level="debug", timeout_keep_alive=20)
