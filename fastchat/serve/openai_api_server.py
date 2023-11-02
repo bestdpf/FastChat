@@ -69,6 +69,8 @@ headers = {"User-Agent": "FastChat API Server"}
 
 
 def create_error_response(code: int, message: str) -> JSONResponse:
+    print(f'create error {code}, {message}')
+    print(traceback.format_exc())
     return JSONResponse(
         ErrorResponse(message=message, code=code).dict(), status_code=400
     )
