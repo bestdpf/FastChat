@@ -263,7 +263,8 @@ class VicunaAdapter(BaseAdapter):
             model_path,
             # trust_remote_code=True,
             low_cpu_mem_usage=True,
-            max_memory={'cpu': '13GiB'},
+            device_map='cuda',
+            max_memory={'cpu': '13GiB', 0: '13GiB'},
             **from_pretrained_kwargs,
         )
         self.raise_warning_for_old_weights(model)
