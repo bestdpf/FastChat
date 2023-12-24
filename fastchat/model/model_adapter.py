@@ -257,6 +257,7 @@ class VicunaAdapter(BaseAdapter):
         return "vicuna" in model_path
 
     def load_model(self, model_path: str, from_pretrained_kwargs: dict):
+        print(f'load model args {from_pretrained_kwargs}')
         tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
         model = AutoModelForCausalLM.from_pretrained(
             model_path,
