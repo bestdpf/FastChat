@@ -190,7 +190,8 @@ def load_model(
     adapter = get_model_adapter(model_path)
     model, tokenizer = adapter.load_model(model_path, kwargs)
 
-    if (device == "cuda" and num_gpus == 1 and not cpu_offloading) or device == "mps":
+    # if (device == "cuda" and num_gpus == 1 and not cpu_offloading) or device == "mps":
+    if device == 'mps':
         model.to(device)
 
     if debug:
@@ -263,7 +264,7 @@ class VicunaAdapter(BaseAdapter):
             model_path,
             # trust_remote_code=True,
             low_cpu_mem_usage=True,
-            device_map='cuda',
+            device_map='auto',
             max_memory={'cpu': '10GiB', 0: '10GiB'},
             **from_pretrained_kwargs,
         )
