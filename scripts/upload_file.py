@@ -5,7 +5,7 @@ import sys
 def upload_file_func(file_path, repo_id, repo_type):
     print(f'uploading {file_path} to {repo_id}')
     api = HfApi()
-    api.upload_file(path_or_fileobj=file_path, repo_id=repo_id, repo_type=repo_type)
+    api.upload_file(path_or_fileobj=file_path, path_in_repo=file_path, repo_id=repo_id, repo_type=repo_type)
 
 
 if __name__ == '__main__':
