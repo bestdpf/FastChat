@@ -113,7 +113,7 @@ def load_model(
         kwargs = {"torch_dtype": torch.float32}
     elif device == "cuda":
         kwargs = {"torch_dtype": torch.float16}
-        if num_gpus != 1 or True:
+        if num_gpus != 1:
             kwargs["device_map"] = "auto"
             if max_gpu_memory is None:
                 kwargs[
@@ -264,8 +264,8 @@ class VicunaAdapter(BaseAdapter):
             model_path,
             # trust_remote_code=True,
             low_cpu_mem_usage=True,
-            # device_map='auto',
-            # max_memory={'cpu': '10GiB', 0: '10GiB'},
+            device_map='auto',
+            max_memory={'cpu': '10GiB', 0: '10GiB'},
             **from_pretrained_kwargs,
         )
         self.raise_warning_for_old_weights(model)
