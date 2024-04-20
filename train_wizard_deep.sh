@@ -5,11 +5,11 @@ export DS_ACCELERATOR="cuda"
 export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:64
 export WANDB_DISABLED="true"
 torchrun --nproc_per_node=6 --master_port=20012 fastchat/train/train_mem.py \
-    --model_name_or_path ../llama-2-7b  \
-    --data_path ../chatfine/total_filtered_20230720.json \
-    --tf32 True \
+    --model_name_or_path ../Meta-Llama-3-8B  \
+    --data_path ../chatfine/total_gpt_full_merge_b16_20240420 \
     --bf16 True \
-    --output_dir output_wizard_deep_0720 \
+    --tf32 True \
+    --output_dir fastchat-vicuna-3-8b-20240420 \
     --num_train_epochs 3 \
     --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 1 \
