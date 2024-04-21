@@ -274,7 +274,7 @@ def train():
         # device_map='cpu',
     )
     rank0_print(f'# tokenizer inputs {tokenizer.model_input_names}')
-    tokenizer.model_input_names = tokenizer.model_input_names.append('labels')
+    tokenizer.model_input_names.append('labels')
     # tokenizer.pad_token = tokenizer.unk_token
     rank0_print(f'#end load tokenizer ...')
 
