@@ -241,12 +241,16 @@ def train():
     )
     model_args, data_args, training_args = parser.parse_args_into_dataclasses()
     local_rank = training_args.local_rank
+
+    rank0_print(f'#start load model ...')
     model = transformers.AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
         trust_remote_code=True,
     )
+    rank0_print(f'#end load model ...')
     model.config.use_cache = False
+    rank0_print(f'#start load tokenizer ...')
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
@@ -257,8 +261,11 @@ def train():
         # device_map='cpu',
     )
     tokenizer.pad_token = tokenizer.unk_token
+    rank0_print(f'#end load tokenizer ...')
 
+    rank0_print(f'#start load data ...')
     data_module = make_supervised_data_module(tokenizer=tokenizer, data_args=data_args)
+    rank0_print(f'#end load data ...')
     trainer = Trainer(
         model=model, tokenizer=tokenizer, args=training_args, **data_module
     )
@@ -270,6 +277,8 @@ def train():
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
     trainer.add_callback(StepCallback)
+
+    rank0_print(f'#start train ...')
 
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
         trainer.train(resume_from_checkpoint=True)
