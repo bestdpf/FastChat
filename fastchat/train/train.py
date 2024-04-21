@@ -259,9 +259,13 @@ def train():
         padding_side="right",
         use_fast=False,
         trust_remote_code=True,
+        bos_token='<|begin_of_text|>',
+        eos_token='<|end_of_text|>',
+        pad_token='<|reserved_special_token_0|>',
+        unk_token='<|reserved_special_token_0|>',
         # device_map='cpu',
     )
-    tokenizer.pad_token = tokenizer.unk_token
+    # tokenizer.pad_token = tokenizer.unk_token
     rank0_print(f'#end load tokenizer ...')
 
     rank0_print(f'#start load data ...')

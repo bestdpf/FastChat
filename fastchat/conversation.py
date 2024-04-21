@@ -239,7 +239,7 @@ register_conv_template(
         offset=0,
         sep_style=SeparatorStyle.ADD_COLON_TWO,
         sep=" ",
-        sep2="</s>",
+        sep2="<|end_of_text|>",
     )
 )
 
