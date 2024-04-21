@@ -120,7 +120,7 @@ def preprocess(
         cur_len = 0
         # target[:cur_len] = IGNORE_TOKEN_ID
         for i, rou in enumerate(rounds):
-            # print(f'rnd {i} {rou}')
+            print(f'rnd {i} {rou}')
             if rou == "":
                 cur_len += 1
                 break
@@ -133,7 +133,7 @@ def preprocess(
             round_len = len(tokenizer(rou).input_ids)
             instruction_len = len(tokenizer(parts[0]).input_ids) - 2
 
-            # print(f'cur_len {cur_len} rnd_len {round_len} ins_len {instruction_len}')
+            print(f'cur_len {cur_len} rnd_len {round_len} ins_len {instruction_len}')
 
 
             target[cur_len : cur_len + instruction_len] = IGNORE_TOKEN_ID
