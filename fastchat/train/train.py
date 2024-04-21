@@ -250,7 +250,7 @@ def train():
 
     rank0_print(f'#start load model ...')
     # model = transformers.AutoModelForCausalLM.from_pretrained(
-    model = transformers.AutoModel.from_pretrained(
+    model = transformers.AutoModelForCausalLM.from_pretrained(
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
         trust_remote_code=True,
