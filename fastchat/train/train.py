@@ -113,20 +113,26 @@ def preprocess(
     sep = conv.sep + conv.roles[1] + ": "
     for conversation, target in zip(conversations, targets):
         total_len = int(target.ne(tokenizer.pad_token_id).sum())
+        print(f'conv is {conversation} len {total_len} sep {sep} sep2 {conv.sep2}')
 
         rounds = conversation.split(conv.sep2)
         cur_len = 1
         target[:cur_len] = IGNORE_TOKEN_ID
         for i, rou in enumerate(rounds):
+            print(f'rnd {i} {rou}')
             if rou == "":
                 break
 
             parts = rou.split(sep)
+            print(f'parts len(parts) {parts}')
             if len(parts) != 2:
                 break
             parts[0] += sep
             round_len = len(tokenizer(rou).input_ids)
             instruction_len = len(tokenizer(parts[0]).input_ids) - 2
+
+            print(f'cur_len {cur_len} rnd_len {round_len} ins_len {instruction_len}')
+
 
             target[cur_len : cur_len + instruction_len] = IGNORE_TOKEN_ID
 
