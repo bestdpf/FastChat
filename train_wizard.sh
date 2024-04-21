@@ -4,6 +4,8 @@ export CUDA_VISIBLE_DEVICES=1,3,4,5
 export HF_DATASETS_IN_MEMORY_MAX_SIZE=20000000000
 export HF_DATASETS_OFFLINE=0
 export PYTHONPATH=.
+export NCCL_P2P_DISABLE="1"
+export NCCL_IB_DISABLE="1"
 
 python -m torch.distributed.run --nproc_per_node=4 --master_port=20011 fastchat/train/train_mem.py \
     --model_name_or_path ../Meta-Llama-3-8B  \
@@ -28,5 +30,5 @@ python -m torch.distributed.run --nproc_per_node=4 --master_port=20011 fastchat/
     --fsdp_transformer_layer_cls_to_wrap 'LlamaDecoderLayer' \
     --model_max_length 8192 \
     --gradient_checkpointing True \
-    --lazy_preprocess False >run_wizard.out 2>run_wizard.err&
+    --lazy_preprocess True >run_wizard.out 2>run_wizard.err&
 

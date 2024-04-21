@@ -19,7 +19,8 @@ python -m torch.distributed.run --nproc_per_node=4 --master_port=20012 fastchat/
     --gradient_accumulation_steps 16 \
     --evaluation_strategy "no" \
     --save_strategy "steps" \
-    --save_steps 40 \
+    --save_steps 200 \
+    --eval_steps 200 \
     --save_total_limit 3 \
     --learning_rate 2e-5 \
     --weight_decay 0. \
@@ -30,6 +31,6 @@ python -m torch.distributed.run --nproc_per_node=4 --master_port=20012 fastchat/
     --model_max_length 8192 \
     --deepspeed "default_offload_opt_param.json" \
     --gradient_checkpointing True \
-    --lazy_preprocess True >run_wizard.out 2>run_wizard.err&
+    --lazy_preprocess False >run_wizard.out 2>run_wizard.err&
 
     #--deepspeed "./ds_flan_t5_z3_config_bf16.json" \
