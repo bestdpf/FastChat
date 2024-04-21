@@ -291,6 +291,9 @@ def train():
                 torch.cuda.empty_cache()
     trainer.add_callback(StepCallback)
 
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
     rank0_print(f'#start train ...')
 
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
