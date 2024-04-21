@@ -263,6 +263,14 @@ def train():
         model=model, tokenizer=tokenizer, args=training_args, **data_module
     )
 
+    class StepCallback(transformers.TrainerCallback):
+
+        def on_step_end(self, args: transformers.TrainingArguments, state: transformers.TrainerState,
+                        control: transformers.TrainerControl, **kwargs):
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+    trainer.add_callback(StepCallback)
+
     if list(pathlib.Path(training_args.output_dir).glob("checkpoint-*")):
         trainer.train(resume_from_checkpoint=True)
     else:
