@@ -17,7 +17,7 @@ python -m torch.distributed.run --nproc_per_node=1 --master_port=20011 fastchat/
     --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 1 \
     --gradient_accumulation_steps 1 \
-    --evaluation_strategy "no" \
+    --evaluation_strategy "steps" \
     --save_strategy "steps" \
     --save_steps 300 \
     --save_total_limit 3 \
