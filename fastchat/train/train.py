@@ -256,13 +256,12 @@ def train():
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
         model_max_length=training_args.model_max_length,
-        padding_side="right",
+        # padding_side="right",
         use_fast=False,
         trust_remote_code=True,
         # device_map='cpu',
     )
-    tokenizer.pad_token = "<|reserved_special_token_0|>"
-    tokenizer.unk_token = "<|reserved_special_token_1|>"
+    # tokenizer.pad_token = tokenizer.unk_token
     rank0_print(f'#end load tokenizer ...')
 
     rank0_print(f'#start load data ...')
