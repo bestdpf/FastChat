@@ -28,5 +28,5 @@ python -m torch.distributed.run --nproc_per_node=4 --master_port=20011 fastchat/
     --fsdp_transformer_layer_cls_to_wrap 'LlamaDecoderLayer' \
     --model_max_length 8192 \
     --gradient_checkpointing True \
-    --lazy_preprocess True >run_wizard.out 2>run_wizard.err&
+    --lazy_preprocess False >run_wizard.out 2>run_wizard.err&
 
