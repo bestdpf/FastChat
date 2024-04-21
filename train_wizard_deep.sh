@@ -7,6 +7,8 @@ export PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:64
 export HF_DATASETS_IN_MEMORY_MAX_SIZE=20000000000
 export HF_DATASETS_OFFLINE=0
 export TRANSFORMERS_OFFLINE=0
+export NCCL_P2P_DISABLE="1"
+export NCCL_IB_DISABLE="1"
 python -m torch.distributed.run --nproc_per_node=4 --master_port=20012 fastchat/train/train_mem.py \
     --model_name_or_path ../Meta-Llama-3-8B  \
     --data_path ../chatfine/total_gpt_full_merge_b16_20240420 \
