@@ -254,6 +254,7 @@ def train():
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
         trust_remote_code=True,
+        device_map='auto',
     )
     rank0_print(f'#end load model ...')
     model.config.use_cache = False
@@ -269,7 +270,6 @@ def train():
         eos_token='<|end_of_text|>',
         pad_token='<|reserved_special_token_0|>',
         unk_token='<|reserved_special_token_0|>',
-        # device_map='cpu',
     )
     rank0_print(f'# tokenizer inputs {tokenizer.model_input_names}')
     tokenizer.model_input_names.append('labels')
