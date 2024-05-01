@@ -84,18 +84,27 @@ def preprocess(
     # Apply prompt templates
     conversations = []
     for i, source_input in enumerate(sources):
-        source = source_input['conversations']
-        if roles[source[0]["from"]] != conv.roles[0]:
-            # Skip the first one if it is not from human
-            source = source[1:]
+        if 'system' in source_input:
+            # glaive-func-all format
+            system_str = source_input['system']
+            if system_str.startswith('SYSTEM:'):
+                system_str = system_str[7:]
+            chat_str = source_input['chat']
+            conversations.append(system_str + chat_str)
+        else:
+            # old llama train format, instruction/gpt/human
+            source = source_input['conversations']
+            if roles[source[0]["from"]] != conv.roles[0]:
+                # Skip the first one if it is not from human
+                source = source[1:]
 
-        conv.messages = []
-        conv.system = source_input.get('instruction', '')
-        for j, sentence in enumerate(source):
-            role = roles[sentence["from"]]
-            assert role == conv.roles[j % 2], f"{i}"
-            conv.append_message(role, sentence["value"])
-        conversations.append(conv.get_prompt())
+            conv.messages = []
+            conv.system = source_input.get('instruction', '')
+            for j, sentence in enumerate(source):
+                role = roles[sentence["from"]]
+                assert role == conv.roles[j % 2], f"{i}"
+                conv.append_message(role, sentence["value"])
+            conversations.append(conv.get_prompt())
 
     # Tokenize conversations
     input_ids = tokenizer(
