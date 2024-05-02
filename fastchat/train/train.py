@@ -100,6 +100,8 @@ def preprocess(
 
             conv.messages = []
             conv.system = source_input.get('instruction', '')
+            if conv.system is None:
+                conv.system = ''
             for j, sentence in enumerate(source):
                 role = roles[sentence["from"]]
                 assert role == conv.roles[j % 2], f"{i}"
