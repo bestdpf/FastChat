@@ -523,6 +523,7 @@ async def create_completion(request: CompletionRequest):
         try:
             all_tasks = await asyncio.gather(*text_completions)
         except Exception as e:
+            print(traceback.format_exc())
             return create_error_response(ErrorCode.INTERNAL_ERROR, str(e))
 
         choices = []
