@@ -342,11 +342,11 @@ async def create_chat_completion(request: ChatCompletionRequest):
         stream=request.stream,
         stop=request.stop,
     )
-    error_check_ret = await check_length(
-        request, gen_params["prompt"], gen_params["max_new_tokens"]
-    )
-    if error_check_ret is not None:
-        return error_check_ret
+    # error_check_ret = await check_length(
+    #     request, gen_params["prompt"], gen_params["max_new_tokens"]
+    # )
+    # if error_check_ret is not None:
+    #     return error_check_ret
 
     if request.stream:
         generator = chat_completion_stream_generator(
@@ -494,10 +494,10 @@ async def create_completion(request: CompletionRequest):
 
     request.prompt = process_input(request.model, request.prompt)
 
-    for text in request.prompt:
-        error_check_ret = await check_length(request, text, request.max_tokens)
-        if error_check_ret is not None:
-            return error_check_ret
+    # for text in request.prompt:
+    #     error_check_ret = await check_length(request, text, request.max_tokens)
+    #     if error_check_ret is not None:
+    #         return error_check_ret
 
     if request.stream:
         generator = generate_completion_stream_generator(request, request.n)
