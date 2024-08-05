@@ -125,12 +125,12 @@ def preprocess(
     # print(f'sep id len {len(tokenizer(sep).input_ids)}')
     for conversation, target in zip(conversations, targets):
         total_len = int(target.ne(tokenizer.pad_token_id).sum())
-        # print(f'tgt {target}')
+        # print(f'tgt {target} {tokenizer.pad_token_id} {tokenizer.unk_token_id}')
         # print(f'conv is {conversation} len {total_len} sep {sep} sep2 {conv.sep2}')
 
         rounds = conversation.split(conv.sep2)
-        cur_len = 0
-        # target[:cur_len] = IGNORE_TOKEN_ID
+        cur_len = 1 # keeep the frist bos 
+        #  target[:cur_len] = IGNORE_TOKEN_ID
         for i, rou in enumerate(rounds):
             # print(f'rnd {i} {rou}')
             if rou == "":
@@ -143,11 +143,11 @@ def preprocess(
             parts[0] += sep
             round_len = len(tokenizer(rou).input_ids)
 
-            instruction_len = len(tokenizer(parts[0]).input_ids) - 1
+            instruction_len = len(tokenizer(parts[0]).input_ids) - 1 # real len without bos
             # print(f'cur_len {cur_len} rnd_len {round_len} ins_len {instruction_len}')
             target[cur_len : cur_len + instruction_len] = IGNORE_TOKEN_ID
 
-            cur_len += round_len + 1
+            cur_len += round_len
         target[cur_len:] = IGNORE_TOKEN_ID
 
         if False:
@@ -159,7 +159,7 @@ def preprocess(
             if cur_len != total_len:
                 target[:] = IGNORE_TOKEN_ID
                 rank0_print(
-                    f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}."
+                    f"WARNING: tokenization mismatch: {cur_len} vs. {total_len}. round number {len(rounds)}"
                     f" (ignored)"
                 )
 
@@ -265,6 +265,7 @@ def train():
         model_args.model_name_or_path,
         cache_dir=training_args.cache_dir,
         trust_remote_code=True,
+        ignore_mismatched_sizes=True,
         # device_map='auto',
     )
     rank0_print(f'#end load model ...')
