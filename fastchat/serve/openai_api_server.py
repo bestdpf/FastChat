@@ -459,28 +459,32 @@ async def chat_completion_stream(model_name: str, gen_params: Dict[str, Any]):
 async def chat_completion(
     model_name: str, gen_params: Dict[str, Any]
 ) -> Optional[Dict[str, Any]]:
-    async with httpx.AsyncClient() as client:
-        worker_addr = await _get_worker_address(model_name, client)
+    try:
+        async with httpx.AsyncClient() as client:
+            worker_addr = await _get_worker_address(model_name, client)
 
-        output = None
-        delimiter = b"\0"
+            output = None
+            delimiter = b"\0"
 
-        async with client.stream(
-            "POST",
-            worker_addr + "/worker_generate_stream",
-            headers=headers,
-            json=gen_params,
-            timeout=WORKER_API_TIMEOUT,
-        ) as response:
-            content = await response.aread()
+            async with client.stream(
+                "POST",
+                worker_addr + "/worker_generate_stream",
+                headers=headers,
+                json=gen_params,
+                timeout=WORKER_API_TIMEOUT,
+            ) as response:
+                content = await response.aread()
 
-        for chunk in content.split(delimiter):
-            if not chunk:
-                continue
-            data = json.loads(chunk.decode())
-            output = data
+            for chunk in content.split(delimiter):
+                if not chunk:
+                    continue
+                data = json.loads(chunk.decode())
+                output = data
 
-        return output
+            return output
+    except Exception as e:
+        print(traceback.format_exc())
+        raise e
 
 
 @app.post("/v1/completions")
