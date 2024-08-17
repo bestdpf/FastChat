@@ -8,6 +8,7 @@ import logging
 import json
 import os
 import time
+import traceback
 from typing import List, Union
 import threading
 import uuid
@@ -208,6 +209,7 @@ class ModelWorker:
             }
             yield json.dumps(ret).encode() + b"\0"
         except (ValueError, RuntimeError) as e:
+            print(traceback.format_exc())
             ret = {
                 "text": f"{SERVER_ERROR_MSG}\n\n({e})",
                 "error_code": ErrorCode.INTERNAL_ERROR,

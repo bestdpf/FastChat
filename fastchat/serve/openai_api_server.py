@@ -267,6 +267,7 @@ async def _get_worker_address(model_name: str, client: httpx.AsyncClient) -> str
     worker_addr = ret.json()["address"]
     # No available worker
     if worker_addr == "":
+        logger.error(f"no worker, model_name: {model_name}, worker_addr: {worker_addr}")
         raise ValueError(f"No available worker for {model_name}")
 
     logger.debug(f"model_name: {model_name}, worker_addr: {worker_addr}")
