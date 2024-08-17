@@ -152,8 +152,12 @@ def generate_stream(
         if temperature < 1e-5 or top_p < 1e-8:  # greedy
             token = int(torch.argmax(last_token_logits))
         else:
-            probs = torch.softmax(last_token_logits, dim=-1)
-            token = int(torch.multinomial(probs, num_samples=1))
+            try:
+                probs = torch.softmax(last_token_logits, dim=-1)
+                token = int(torch.multinomial(probs, num_samples=1))
+            except:
+                print(f'fallback to disabled do_sample')
+                token = int(torch.argmax(last_token_logits))
 
         output_ids.append(token)
 
