@@ -94,13 +94,15 @@ class ModelWorker:
             self.context_len = self.model.config.max_position_embeddings
         else:
             self.context_len = 2048
+        print(f'force context_len 2048 for llama3.1')
+        self.context_len = 2048
 
         # generate_stream
         is_chatglm = "chatglm" in str(type(self.model)).lower()
         if is_chatglm:
             self.generate_stream_func = chatglm_generate_stream
         else:
-            self.generate_stream_func = generate_stream
+            self.generate_stream_func = generate_stream_v2
 
         if not no_register:
             self.register_to_controller()
