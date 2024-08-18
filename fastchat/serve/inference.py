@@ -2,6 +2,7 @@
 import abc
 import gc
 import math
+import traceback
 from typing import Iterable, Optional
 import sys
 import warnings
@@ -88,7 +89,9 @@ def generate_stream(
 
     input_ids = input_ids[-max_src_len:]
 
-    print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
+    print(
+        f'repetition_penalty is {repetition_penalty}, top_p is {top_p} src_len {max_src_len} new_len {max_new_tokens}')
+
     logits_processor = prepare_logits_processor(
         temperature, repetition_penalty, top_p, top_k, torch.as_tensor([input_ids], device=device),
     )
@@ -246,60 +249,68 @@ def generate_stream(
 def generate_stream_v2(
     model, tokenizer, params, device, context_len=2048, stream_interval=2
 ):
-    prompt = params["prompt"]
-    len_prompt = len(prompt)
-    temperature = float(params.get("temperature", 1.0))
-    repetition_penalty = float(params.get("repetition_penalty", 1.0))
-    top_p = float(params.get("top_p", 1.0))
-    top_k = int(params.get("top_k", -1))  # -1 means disable
-    max_new_tokens = int(params.get("max_new_tokens", 256))
-    stop_str = params.get("stop", None)
-    echo = bool(params.get("echo", True))
-    stop_token_ids = params.get("stop_token_ids", None) or []
-    stop_token_ids.append(tokenizer.eos_token_id)
+    output_ids = None
+    try:
+        prompt = params["prompt"]
+        len_prompt = len(prompt)
+        temperature = float(params.get("temperature", 1.0))
+        repetition_penalty = float(params.get("repetition_penalty", 1.0))
+        top_p = float(params.get("top_p", 1.0))
+        top_k = int(params.get("top_k", -1))  # -1 means disable
+        max_new_tokens = int(params.get("max_new_tokens", 256))
+        stop_str = params.get("stop", None)
+        echo = bool(params.get("echo", True))
+        stop_token_ids = params.get("stop_token_ids", None) or []
+        stop_token_ids.append(tokenizer.eos_token_id)
 
-    input_ids = tokenizer(prompt).input_ids
-    input_echo_len = len(input_ids)
+        input_ids = tokenizer(prompt).input_ids
+        input_echo_len = len(input_ids)
 
-    if model.config.is_encoder_decoder:
-        max_src_len = context_len
-    else:
-        max_src_len = context_len - max_new_tokens - 8
+        if model.config.is_encoder_decoder:
+            max_src_len = context_len
+        else:
+            max_src_len = context_len - max_new_tokens - 8
 
-    input_ids = input_ids[-max_src_len:]
+        input_ids = input_ids[-max_src_len:]
 
-    print(f'repetition_penalty is {repetition_penalty}, top_p is {top_p}')
+        print(
+            f'repetition_penalty is {repetition_penalty}, top_p is {top_p} src_len {max_src_len} new_len {max_new_tokens}')
 
-    output_ids = model.generate(input_ids=torch.as_tensor([input_ids], device=device),
-                                # max_length=max_new_tokens,
-                                max_new_tokens=max_new_tokens,
-                                temperature=temperature, repetition_penalty=repetition_penalty,
-                                use_cache=True, top_p=top_p, top_k=top_k)
+        output_ids = model.generate(input_ids=torch.as_tensor([input_ids], device=device),
+                                    # max_length=max_new_tokens,
+                                    max_new_tokens=max_new_tokens,
+                                    temperature=temperature, repetition_penalty=repetition_penalty,
+                                    use_cache=True, top_p=top_p, top_k=top_k)
 
-    output_ids = output_ids[0][input_echo_len:]
-    output = tokenizer.decode(
-        output_ids,
-        skip_special_tokens=True,
-        spaces_between_special_tokens=False,
-    )
-    if len(output_ids) == max_new_tokens:
-        finish_reason = "length"
-    else:
-        finish_reason = "stop"
+        output_ids = output_ids[0][input_echo_len:]
+        output = tokenizer.decode(
+            output_ids,
+            skip_special_tokens=True,
+            spaces_between_special_tokens=False,
+        )
+        if len(output_ids) >= max_new_tokens:
+            finish_reason = "length"
+        else:
+            finish_reason = "stop"
 
-    yield {
-        "text": output,
-        "usage": {
-            "prompt_tokens": input_echo_len,
-            "completion_tokens": len(output_ids) - 1,
-            "total_tokens": input_echo_len + len(output_ids) - 1,
-        },
-        "finish_reason": finish_reason,
-    }
-
-    # clean
-    gc.collect()
-    torch.cuda.empty_cache()
+        yield {
+            "text": output,
+            "usage": {
+                "prompt_tokens": input_echo_len,
+                "completion_tokens": len(output_ids) - 1,
+                "total_tokens": input_echo_len + len(output_ids) - 1,
+            },
+            "finish_reason": finish_reason,
+        }
+    except Exception as e:
+        print(traceback.format_exc())
+        print(f'e is {e}')
+    finally:
+        # clean
+        if output_ids is not None:
+            del output_ids
+        gc.collect()
+        torch.cuda.empty_cache()
 
 
 class ChatIO(abc.ABC):
