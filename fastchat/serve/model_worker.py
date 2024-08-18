@@ -38,7 +38,7 @@ import uvicorn
 from fastchat.constants import WORKER_HEART_BEAT_INTERVAL, ErrorCode, SERVER_ERROR_MSG
 from fastchat.model.model_adapter import load_model, add_model_args
 from fastchat.model.chatglm_model import chatglm_generate_stream
-from fastchat.serve.inference import generate_stream
+from fastchat.serve.inference import generate_stream, generate_stream_v2
 from fastchat.utils import build_logger, pretty_print_semaphore
 
 GB = 1 << 30
@@ -100,7 +100,7 @@ class ModelWorker:
         if is_chatglm:
             self.generate_stream_func = chatglm_generate_stream
         else:
-            self.generate_stream_func = generate_stream
+            self.generate_stream_func = generate_stream_v2
 
         if not no_register:
             self.register_to_controller()
