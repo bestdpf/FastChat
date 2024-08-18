@@ -278,6 +278,7 @@ def generate_stream_v2(
 
         output_ids = model.generate(input_ids=torch.as_tensor([input_ids], device=device),
                                     # max_length=max_new_tokens,
+                                    do_sample=False,
                                     max_new_tokens=max_new_tokens,
                                     temperature=temperature, repetition_penalty=repetition_penalty,
                                     use_cache=True, top_p=top_p, top_k=top_k)
