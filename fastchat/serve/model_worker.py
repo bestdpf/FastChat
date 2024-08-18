@@ -207,9 +207,13 @@ class ModelWorker:
                 "text": f"{SERVER_ERROR_MSG}\n\n({e})",
                 "error_code": ErrorCode.CUDA_OUT_OF_MEMORY,
             }
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
             yield json.dumps(ret).encode() + b"\0"
         except (ValueError, RuntimeError) as e:
             print(traceback.format_exc())
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
             ret = {
                 "text": f"{SERVER_ERROR_MSG}\n\n({e})",
                 "error_code": ErrorCode.INTERNAL_ERROR,
