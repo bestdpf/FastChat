@@ -88,6 +88,8 @@ class ModelWorker:
         if self.tokenizer.pad_token == None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
+        self.model.generation_config.pad_token_id = self.tokenizer.pad_token_id
+
         if hasattr(self.model.config, "max_sequence_length"):
             self.context_len = self.model.config.max_sequence_length
         elif hasattr(self.model.config, "max_position_embeddings"):
@@ -209,18 +211,17 @@ class ModelWorker:
                 "text": f"{SERVER_ERROR_MSG}\n\n({e})",
                 "error_code": ErrorCode.CUDA_OUT_OF_MEMORY,
             }
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
             yield json.dumps(ret).encode() + b"\0"
         except (ValueError, RuntimeError) as e:
             print(traceback.format_exc())
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
             ret = {
                 "text": f"{SERVER_ERROR_MSG}\n\n({e})",
                 "error_code": ErrorCode.INTERNAL_ERROR,
             }
             yield json.dumps(ret).encode() + b"\0"
+        finally:
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
 
     def generate_gate(self, params):
         try:
