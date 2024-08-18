@@ -88,7 +88,9 @@ class ModelWorker:
         if self.tokenizer.pad_token == None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
 
-        self.model.generation_config.pad_token_id = self.tokenizer.pad_token_id
+        if self.model.generation_config.pad_token_id is None:
+            print(f'set pad id for gen {self.tokenizer.pad_token_id}')
+            self.model.generation_config.pad_token_id = self.tokenizer.pad_token_id
 
         if hasattr(self.model.config, "max_sequence_length"):
             self.context_len = self.model.config.max_sequence_length
