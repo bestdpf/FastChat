@@ -256,7 +256,7 @@ def generate_stream_v2(
         temperature = float(params.get("temperature", 1.0))
         repetition_penalty = float(params.get("repetition_penalty", 1.0))
         top_p = float(params.get("top_p", 1.0))
-        top_k = int(params.get("top_k", -1))  # -1 means disable
+        top_k = int(params.get("top_k", 50))  # -1 means disable
         max_new_tokens = int(params.get("max_new_tokens", 256))
         stop_str = params.get("stop", None)
         echo = bool(params.get("echo", True))
