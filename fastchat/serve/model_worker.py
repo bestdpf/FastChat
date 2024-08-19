@@ -68,7 +68,7 @@ def patch_fast_decoder(
         if isinstance(token_ids, int):
             token_ids = [token_ids]
 
-        token_ids = [self.pad_token_id if token_id < 0 or token_id >= len(self._tokenizer) else token_id for token_id in token_ids]
+        token_ids = [self.pad_token_id if token_id < 0 or token_id >= len(self) else token_id for token_id in token_ids]
         text = self._tokenizer.decode(token_ids, skip_special_tokens=skip_special_tokens)
 
         clean_up_tokenization_spaces = (
