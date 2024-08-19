@@ -56,6 +56,37 @@ def heart_beat_worker(controller):
         controller.send_heart_beat()
 
 
+def patch_fast_decoder(
+        self,
+        token_ids: Union[int, List[int]],
+        skip_special_tokens: bool = False,
+        clean_up_tokenization_spaces: bool = None,
+        **kwargs,
+    ) -> str:
+        self._decode_use_source_tokenizer = kwargs.pop("use_source_tokenizer", False)
+
+        if isinstance(token_ids, int):
+            token_ids = [token_ids]
+
+        token_ids = [self.pad_token_id if token_id < 0 or token_id >= len(self._tokenizer) else token_id for token_id in token_ids]
+        text = self._tokenizer.decode(token_ids, skip_special_tokens=skip_special_tokens)
+
+        clean_up_tokenization_spaces = (
+            clean_up_tokenization_spaces
+            if clean_up_tokenization_spaces is not None
+            else self.clean_up_tokenization_spaces
+        )
+        if clean_up_tokenization_spaces:
+            clean_text = self.clean_up_tokenization(text)
+            return clean_text
+        else:
+            return text
+
+
+from transformers.tokenization_utils_fast import PreTrainedTokenizerFast
+PreTrainedTokenizerFast._decode = patch_fast_decoder
+
+
 class ModelWorker:
     def __init__(
         self,
