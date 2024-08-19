@@ -137,7 +137,7 @@ class ModelWorker:
         if is_chatglm:
             self.generate_stream_func = chatglm_generate_stream
         else:
-            self.generate_stream_func = generate_stream_v2
+            self.generate_stream_func = generate_stream
 
         if not no_register:
             self.register_to_controller()

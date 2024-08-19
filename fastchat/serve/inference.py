@@ -152,7 +152,7 @@ def generate_stream(
             # Switch to CPU by avoiding some bugs in mps backend.
             last_token_logits = last_token_logits.float().to("cpu")
 
-        if temperature < 1e-5 or top_p < 1e-8:  # greedy
+        if True or temperature < 1e-5 or top_p < 1e-8:  # greedy
             token = int(torch.argmax(last_token_logits))
         else:
             try:
