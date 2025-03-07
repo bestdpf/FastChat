@@ -105,7 +105,11 @@ def preprocess(
             for j, sentence in enumerate(source):
                 role = roles[sentence["from"]]
                 assert role == conv.roles[j % 2], f"{i}"
-                conv.append_message(role, sentence["value"])
+                if 'reason' in sentence:
+                    content = '<think>' + sentence['reason'] + '</think>' + sentence['value']
+                else:
+                    content = sentence['value']
+                conv.append_message(role, content)
             conversations.append(conv.get_prompt())
 
     # Tokenize conversations
