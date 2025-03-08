@@ -106,7 +106,7 @@ def preprocess(
                 role = roles[sentence["from"]]
                 assert role == conv.roles[j % 2], f"{i}"
                 if 'reason' in sentence:
-                    content = '<think>' + sentence['reason'] + '</think>' + sentence['value']
+                    content = '<|begin_of_thought|>' + sentence['reason'] + '<|end_of_thought|>' + sentence['value']
                 else:
                     content = sentence['value']
                 conv.append_message(role, content)
