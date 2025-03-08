@@ -37,5 +37,5 @@ nohup python -m torch.distributed.run --nproc_per_node=1 --master_port=20012 fas
     --model_max_length 2048 \
     --gradient_checkpointing True \
     --lazy_preprocess False >run_wizard_nohup.out 2>run_wizard_nohup.err&
-tail -f run_wizard.*
+tail -f run_wizard_nohup.*
     #--deepspeed "./ds_flan_t5_z3_config_bf16.json" \
