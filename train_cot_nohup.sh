@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-export CUDA_VISIBLE_DEVICES=0
+export CUDA_VISIBLE_DEVICES=0,1,2
 export PYTHONPATH=.
 export OMP_NUM_THREADS=10
 export DS_ACCELERATOR="cuda"
@@ -12,7 +12,7 @@ export HF_DATASETS_OFFLINE=0
 export TRANSFORMERS_OFFLINE=0
 export NCCL_P2P_DISABLE="1"
 export NCCL_IB_DISABLE="1"
-nohup python -m torch.distributed.run --nproc_per_node=1 --master_port=20012 fastchat/train/train_mem.py \
+nohup python -m torch.distributed.run --nproc_per_node=3 --master_port=20012 fastchat/train/train_mem.py \
     --model_name_or_path ./fastchat-vicuna-3-8b-20240906-full  \
     --data_path ../deepevo/back_10000.json\
     --bf16 True \
