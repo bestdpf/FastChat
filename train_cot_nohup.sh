@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-export CUDA_VISIBLE_DEVICES=0,1,2
+export CUDA_VISIBLE_DEVICES=0,1,3
 export PYTHONPATH=.
 export OMP_NUM_THREADS=10
 export DS_ACCELERATOR="cuda"
@@ -13,11 +13,11 @@ export TRANSFORMERS_OFFLINE=0
 export NCCL_P2P_DISABLE="1"
 export NCCL_IB_DISABLE="1"
 nohup python -m torch.distributed.run --nproc_per_node=3 --master_port=20012 fastchat/train/train_mem.py \
-    --model_name_or_path ./fastchat-vicuna-3-8b-20240906-full  \
-    --data_path ../deepevo/back_10000.json\
+    --model_name_or_path ../Llama-3.1-8B  \
+    --data_path ../deepevo/tmp_v6.json\
     --bf16 True \
     --tf32 True \
-    --output_dir fastchat-vicuna-3-8b-20250308 \
+    --output_dir fastchat-vicuna-3-8b-20250311 \
     --num_train_epochs 1 \
     --per_device_train_batch_size 1 \
     --per_device_eval_batch_size 1 \
@@ -37,5 +37,5 @@ nohup python -m torch.distributed.run --nproc_per_node=3 --master_port=20012 fas
     --model_max_length 2048 \
     --gradient_checkpointing True \
     --lazy_preprocess False >run_wizard_nohup.out 2>run_wizard_nohup.err&
-tail -f run_wizard_nohup.*
+# tail -f run_wizard_nohup.*
     #--deepspeed "./ds_flan_t5_z3_config_bf16.json" \
