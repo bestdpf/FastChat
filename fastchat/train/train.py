@@ -32,6 +32,9 @@ from fastchat.model.model_adapter import get_conversation_template
 IGNORE_TOKEN_ID = LabelSmoother.ignore_index
 
 
+SKY_T1_SYSTEM_PROMPT = 'Following that is formatted as between "USER" and "ASSISTANT", "ASSISTANT" involves thoroughly exploring questions through a systematic thinking process before providing the final answer. "ASSISTANT" structures response into two main sections: Thought and Answer, with the format of  "<|begin_of_thought|> {thought content} <|end_of_thought|> <|begin_of_answer|> {answer content} <|end_of_answer|>", where thought content is thinking process, and answer content is the final answer.'
+
+
 @dataclass
 class ModelArguments:
     model_name_or_path: Optional[str] = field(default="facebook/opt-125m")
@@ -102,11 +105,12 @@ def preprocess(
             conv.system = source_input.get('instruction', '')
             if conv.system is None:
                 conv.system = ''
+            conv.system += SKY_T1_SYSTEM_PROMPT
             for j, sentence in enumerate(source):
                 role = roles[sentence["from"]]
                 assert role == conv.roles[j % 2], f"{i}"
                 if 'reason' in sentence:
-                    content = '<|begin_of_thought|>' + sentence['reason'] + '<|end_of_thought|>' + sentence['value']
+                    content = '<|begin_of_thought|> ' + sentence['reason'] + ' <|end_of_thought|>' + ' <|begin_of_answer|> ' + sentence['value'] + ' <|end_of_answer|>'
                 else:
                     content = sentence['value']
                 conv.append_message(role, content)
